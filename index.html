@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lutfi Store - E-commerce Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #1a5fb4;
+            --primary-dark: #0d4a9c;
+            --primary-light: #e8f2ff;
+            --secondary: #ff6b35;
+            --secondary-light: #ffa726;
+            --accent: #25D366;
+            --dark: #1a1a1a;
+            --gray: #666;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMASI SPLASH SCREEN ===== */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a5fb4 0%, #0d4a9c 50%, #ff6b35 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .splash-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: white;
+            animation: loadingDot 1.4s ease-in-out infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes loadingDot {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--white);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--secondary-light);
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary);
+            color: white;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .search-container {
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        .search-container button {
+            background-color: var(--secondary);
+            border: none;
+            color: white;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-container button:hover {
+            background-color: var(--secondary-light);
+        }
+
+        /* ===== BANNER SLIDER ===== */
+        .banner-slider {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            margin: 10px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .banner-slide {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            transition: transform 0.5s ease;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .banner-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(26, 95, 180, 0.8), rgba(13, 74, 156, 0.6));
+            border-radius: 12px;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .slide-indicators {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            z-index: 3;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .indicator.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+        /* ===== KATEGORI ===== */
+        .categories {
+            padding: 20px 15px;
+            background-color: var(--white);
+            margin: 10px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .category-list {
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+
+        .category-list::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .category-item:hover, .category-item.active {
+            background-color: var(--primary-light);
+            transform: translateY(-5px);
+        }
+
+        .category-item.active .category-icon {
+            background-color: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 22px;
+            transition: var(--transition);
+        }
+
+        .category-item:hover .category-icon {
+            background-color: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .category-name {
+            font-size: 12px;
+            text-align: center;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        /* ===== PRODUK ===== */
+        .products {
+            padding: 20px 15px;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .products h2 {
+            font-size: 18px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .products h2 i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .category-filter {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
+            background-color: var(--primary-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            min-height: 38px;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .product-rating {
+            color: var(--secondary-light);
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .rating-count {
+            color: var(--gray);
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        .whatsapp-order-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            width: 100%;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .whatsapp-order-btn:hover {
+            background-color: #128C7E;
+        }
+
+        .whatsapp-order-btn i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        /* ===== TESTIMONI ===== */
+        .testimonials {
+            padding: 20px 15px;
+            background-color: var(--primary-light);
+            margin: 10px;
+            border-radius: 12px;
+        }
+
+        .testimonials h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .testimonials h2 i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .testimonial-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 3px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-content {
+            flex: 1;
+        }
+
+        .testimonial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .testimonial-date {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        .testimonial-rating {
+            color: var(--secondary-light);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-text {
+            font-size: 13px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        /* ===== FLOATING WHATSAPP BUTTON ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: var(--transition);
+            animation: floatAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .footer-logo span {
+            color: var(--secondary-light);
+        }
+    
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            color: var(--secondary-light);
+        }
+
+        .copyright {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .splash-logo {
+                font-size: 2.8rem;
+            }
+            
+            .banner-slider {
+                height: 160px;
+            }
+            
+            .banner-content {
+                font-size: 18px;
+            }
+            
+            .product-grid {
+                gap: 10px;
+            }
+            
+            .product-image {
+                height: 110px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .splash-logo {
+                font-size: 2.2rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .category-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">LUTFI STORE</div>
+        <div class="splash-subtitle"> Mudah, Aman & Terpercaya</div>
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-top">
+                <div class="logo">Lutfi <span>Store</span></div>
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="cart-count">3</div>
+                </div>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Cari produk di Lutfi Store..." id="searchInput">
+                <button id="searchButton"><i class="fas fa-search"></i></button>
+            </div>
+        </header>
+
+        <!-- BANNER SLIDER -->
+        <div class="banner-slider">
+            <div class="banner-slide active" style="background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')')">
+                <div class="banner-content">DISKON HINGGA 70%</div>
+            </div>
+            <div class="banner-slide" style="background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')">
+                <div class="banner-content">GRATIS ONGKIR SELURUH INDONESIA</div>
+            </div>
+            <div class="banner-slide" style="background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')">
+                <div class="banner-content">CASHBACK 50% PEMBELIAN PERTAMA</div>
+            </div>
+            <div class="slide-indicators">
+                <div class="indicator active" data-slide="0"></div>
+                <div class="indicator" data-slide="1"></div>
+                <div class="indicator" data-slide="2"></div>
+            </div>
+        </div>
+
+        <!-- KATEGORI -->
+        <div class="categories">
+            <h2 class="section-title"><i class="fas fa-layer-group"></i> Kategori Produk</h2>
+            <div class="category-list">
+                <div class="category-item active" data-category="all">
+                    <div class="category-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <div class="category-name">Semua</div>
+                </div>
+                <div class="category-item" data-category="akungame">
+                    <div class="category-icon">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <div class="category-name">Akun game</div>
+                </div>
+                <div class="category-item" data-category="server">
+                    <div class="category-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="category-name">pterodectyl</div>
+                </div>
+                <div class="category-item" data-category="books">
+                    <div class="category-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="category-name">Buku</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUK -->
+        <div class="products">
+            <div class="products-header">
+                <h2><i class="fas fa-fire"></i> Produk Terlaris</h2>
+                <div class="category-filter" id="currentCategory">Semua Produk</div>
+            </div>
+            <div class="product-grid" id="productGrid">
+                <!-- Produk akan dimuat via JavaScript -->
+            </div>
+        </div>
+
+        <!-- TESTIMONI -->
+        <div class="testimonials">
+            <h2><i class="fas fa-star"></i> Testimoni Pelanggan</h2>
+            <div class="testimonial-list" id="testimonialList">
+                <!-- Testimoni akan dimuat via JavaScript -->
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-logo">Lutfi <span>Store</span></div>
+            <p class="footer-description">
+                lutfi store aplikasi terpercaya dengan berbagai produk berkualitas dan harga terjangkau.
+            </p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fab fa-youtube"></i>
+                    <span>lutfidev</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>gmail@lutfiyusufalazka</span>
+                </div>
+            </div>
+            <div class="copyright">Created by Lutfi - Hak Cipta Dilindungi © 2026</div>
+        </footer>
+
+        <!-- FLOATING WHATSAPP BUTTON -->
+        <div class="whatsapp-float" id="whatsappFloat">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+    </div>
+
+    <script>
+        // Data produk dengan kategori, nomor WhatsApp, dan testimoni
+        const products = [
+            {
+                id: 1,
+                name: "Buku Mina No Nihongo 1",
+                price: "Rp 12.000",
+                image: "https://files.catbox.moe/l5h3ge.jpg",
+                rating: 5.0,
+                ratingCount: 128,
+                category: "books",
+                whatsappNumber: "6288985628174",
+                description: "Buku pembelajaran bahasa Jepang untuk pemula dengan penjelasan lengkap dan contoh percakapan sehari-hari.",
+                testimonials: [
+                    { 
+                        name: "Sari Dewi", 
+                        date: "15 Sep 2025", 
+                        rating: 5, 
+                        text: "Buku sangat membantu dalam belajar bahasa Jepang. Materinya lengkap dan mudah dipahami.",
+                        avatar: "https://randomuser.me/api/portraits/women/32.jpg"
+                    },
+                    { 
+                        name: "Budi Santoso", 
+                        date: "10 Sep 2025", 
+                        rating: 4, 
+                        text: "Kualitas buku bagus, pengiriman cepat. Cocok untuk pemula yang ingin belajar bahasa Jepang.",
+                        avatar: "https://randomuser.me/api/portraits/men/54.jpg"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Buku Mina No Nihongo 2",
+                price: "Rp 13.000",
+                image: "https://files.catbox.moe/l5h3ge.jpg",
+                rating: 4.2,
+                ratingCount: 89,
+                category: "books",
+                whatsappNumber: "6288985628174",
+                description: "Lanjutan dari buku Mina No Nihongo 1, untuk level menengah dengan materi yang lebih kompleks.",
+                testimonials: [
+                    { 
+                        name: "Rina Maharani", 
+                        date: "20 Sep 2025", 
+                        rating: 5, 
+                        text: "Lanjutan yang sempurna dari buku pertama. Penjelasan grammar sangat detail.",
+                        avatar: "https://randomuser.me/api/portraits/women/45.jpg"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "Buku Belajar Bahasa Jepang",
+                price: "Rp 8.000",
+                image: "https://files.catbox.moe/ues42l.jpg",
+                rating: 4.8,
+                ratingCount: 67,
+                category: "books",
+                whatsappNumber: "6288985628174",
+                description: "buku belajar bahasa jepang lengkap kaiwa cocok untuk belajar berbicara dalam bahasa jepang.",
+                testimonials: [
+                    { 
+                        name: "Tech Master", 
+                        date: "12 Sep 2025", 
+                        rating: 5, 
+                        text: "bukunya bagus dan komplit kaiwa saya jadi bisa berbicara dalam bahasa jepang sedikit demi sedikit.",
+                        avatar: "https://randomuser.me/api/portraits/men/65.jpg"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: "Kanji JLPT N5",
+                price: "Rp 5.000",
+                image: "https://files.catbox.moe/eegfmx.jpg",
+                rating: 4.8,
+                ratingCount: 67,
+                category: "books",
+                whatsappNumber: "6288985628174",
+                description: "buku JLPT N5 kanji jepang komplit.",
+                testimonials: [
+                    { 
+                        name: "Tech Master", 
+                        date: "12 Sep 2025", 
+                        rating: 5, 
+                        text: "bukunya bagus dan komplit tulisan kanji nya tebal dan mudah di hafalkan.",
+                        avatar: "https://randomuser.me/api/portraits/men/65.jpg"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: "Bahasa Jepang 1",
+                price: "Rp 5.000",
+                image: "https://files.catbox.moe/eeo99s.jpg",
+                rating: 4.3,
+                ratingCount: 156,
+                category: "books",
+                whatsappNumber: "6288985628174",
+                description: "buku bahasa jepang 1 cocok buat pemula belajar bahasa jepang dan mudah di pahami.",
+                testimonials: [
+                    { 
+                        name: "Samsul Arifin", 
+                        date: "5 Sep 2025", 
+                        rating: 4, 
+                        text: "bukunya bagus dan mudah di pahami terimakasih lutfi store.",
+                        avatar: "https://randomuser.me/api/portraits/men/33.jpg"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                name: "Server VPS 2GB RAM",
+                price: "Rp 15.000",
+                image: "https://files.catbox.moe/tpukh0.jpg",
+                rating: 4.9,
+                ratingCount: 45,
+                category: "server",
+                whatsappNumber: "6288246143028",
+                description: "Server VPS high performance untuk kebutuhan hosting berat dan aplikasi enterprise.",
+                testimonials: [
+                    { 
+                        name: "Developer Expert", 
+                        date: "30 Sep 2025", 
+                        rating: 5, 
+                        text: "Server sangat stabil, uptime 99.9%. Recommended untuk developer!",
+                        avatar: "https://randomuser.me/api/portraits/men/68.jpg"
+                    }
+                ]
+            }
+        ];
+
+        // Data testimoni utama untuk halaman
+        const mainTestimonials = [
+            { 
+                name: "Sari Dewi", 
+                date: "15 Sep 2023", 
+                rating: 5, 
+                text: "Barang sampai dengan cepat dan sesuai deskripsi. Seller ramah dan pengemasan rapi. Terima kasih Lutfi Store!",
+                avatar: "https://randomuser.me/api/portraits/women/32.jpg"
+            },
+            { 
+                name: "Budi Santoso", 
+                date: "10 Sep 2023", 
+                rating: 4, 
+                text: "Produk berkualitas dengan harga terjangkau. Proses pengiriman cepat. Akan belanja lagi di sini.",
+                avatar: "https://randomuser.me/api/portraits/men/54.jpg"
+            },
+            { 
+                name: "Maya Indah", 
+                date: "5 Sep 2023", 
+                rating: 4.5, 
+                text: "Pelayanan excellent! Produk original dan harga bersaing. Sudah beberapa kali order dan selalu puas.",
+                avatar: "https://randomuser.me/api/portraits/women/67.jpg"
+            },
+            { 
+                name: "Rizki Ahmad", 
+                date: "1 Okt 2023", 
+                rating: 5, 
+                text: "Toko online terbaik! Responsif, produk asli, dan harga bersaing. 100% recommended!",
+                avatar: "https://randomuser.me/api/portraits/men/36.jpg"
+            }
+        ];
+
+        // Kategori mapping
+        const categoryNames = {
+            'all': 'Semua Produk',
+            'akungame': 'Akun Game',
+            'server': 'Pterodectyl',
+            'nokos': 'Nomor Kosong',
+            'books': 'Buku',
+            'addon': 'Addon'
+        };
+
+        // State aplikasi
+        let currentCategory = 'all';
+        let filteredProducts = [...products];
+
+        // Inisialisasi Aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sembunyikan splash screen setelah 2 detik
+            setTimeout(() => {
+                document.getElementById('splashScreen').classList.add('hidden');
+            }, 2000);
+            
+            // Render produk awal
+            renderProducts();
+            
+            // Render testimoni utama
+            renderMainTestimonials();
+            
+            // Setup banner slider
+            setupBannerSlider();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        // Render produk ke grid
+        function renderProducts() {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+            
+            // Update filter display
+            document.getElementById('currentCategory').textContent = categoryNames[currentCategory];
+            
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                // Generate rating bintang
+                let stars = '';
+                const fullStars = Math.floor(product.rating);
+                const hasHalfStar = product.rating % 1 !== 0;
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else if (i === fullStars && hasHalfStar) {
+                        stars += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price}</div>
+                        <div class="product-rating">
+                            ${stars} <span class="rating-count">(${product.ratingCount})</span>
+                        </div>
+                        <button class="whatsapp-order-btn" data-product-id="${product.id}">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                `;
+                
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Render testimoni utama
+        function renderMainTestimonials() {
+            const testimonialList = document.getElementById('testimonialList');
+            testimonialList.innerHTML = '';
+            
+            mainTestimonials.forEach(testimonial => {
+                const testimonialItem = document.createElement('div');
+                testimonialItem.className = 'testimonial-item';
+                
+                let stars = '';
+                for (let i = 0; i < 5; i++) {
+                    if (i < Math.floor(testimonial.rating)) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else if (i === Math.floor(testimonial.rating) && testimonial.rating % 1 !== 0) {
+                        stars += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                testimonialItem.innerHTML = `
+                    <img src="${testimonial.avatar}" alt="Customer" class="testimonial-avatar">
+                    <div class="testimonial-content">
+                        <div class="testimonial-header">
+                            <div class="testimonial-name">${testimonial.name}</div>
+                            <div class="testimonial-date">${testimonial.date}</div>
+                        </div>
+                        <div class="testimonial-rating">
+                            ${stars}
+                        </div>
+                        <div class="testimonial-text">${testimonial.text}</div>
+                    </div>
+                `;
+                
+                testimonialList.appendChild(testimonialItem);
+            });
+        }
+
+        // Filter produk berdasarkan kategori
+        function filterProductsByCategory(category) {
+            currentCategory = category;
+            
+            // Update kategori aktif
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-category') === category) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Filter produk
+            if (category === 'all') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => product.category === category);
+            }
+            
+            // Render ulang produk
+            renderProducts();
+        }
+
+        // Setup banner slider
+        function setupBannerSlider() {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.banner-slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                slides[index].classList.add('active');
+                indicators[index].classList.add('active');
+                currentSlide = index;
+            }
+            
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+            
+            // Auto slide setiap 5 detik
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }, 5000);
+        }
+
+        // Fungsi untuk membuka WhatsApp dengan nomor yang berbeda berdasarkan produk
+        function openWhatsAppOrder(product) {
+            // Format nomor WhatsApp (hapus karakter non-digit)
+            const phoneNumber = product.whatsappNumber.replace(/\D/g, '');
+            
+            // Format pesan WhatsApp
+            const message = `Halo Kakak, saya ingin memesan produk berikut:
+
+Nama Produk: ${product.name}
+Harga: ${product.price}
+
+Apakah produk ini tersedia? Saya ingin melanjutkan pembelian.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Setup semua event listeners
+        function setupEventListeners() {
+            // Kategori item - filter produk
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    filterProductsByCategory(category);
+                });
+            });
+            
+            // Tombol WhatsApp pada produk
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('whatsapp-order-btn') || e.target.closest('.whatsapp-order-btn')) {
+                    const button = e.target.classList.contains('whatsapp-order-btn') 
+                        ? e.target 
+                        : e.target.closest('.whatsapp-order-btn');
+                    
+                    const productId = parseInt(button.getAttribute('data-product-id'));
+                    const product = products.find(p => p.id === productId);
+                    
+                    // Langsung buka WhatsApp tanpa input email
+                    if (product) {
+                        openWhatsAppOrder(product);
+                    }
+                }
+            });
+            
+            // Floating WhatsApp button (default ke nomor utama)
+            document.getElementById('whatsappFloat').addEventListener('click', function() {
+                const phoneNumber = '6288985628174';
+                const message = "Halo kakak, saya ingin bertanya tentang produk yang ada di toko Anda.";
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                
+                window.open(whatsappURL, '_blank');
+            });
+            
+            // Search button
+            document.getElementById('searchButton').addEventListener('click', function() {
+                const query = document.getElementById('searchInput').value.trim();
+                if (query) {
+                    // Filter produk berdasarkan pencarian
+                    const searchResults = products.filter(product => 
+                        product.name.toLowerCase().includes(query.toLowerCase())
+                    );
+                    
+                    if (searchResults.length > 0) {
+                        filteredProducts = searchResults;
+                        renderProducts();
+                        document.getElementById('currentCategory').textContent = `Hasil: "${query}"`;
+                        
+                        // Reset kategori aktif
+                        document.querySelectorAll('.category-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                    } else {
+                        alert(`Tidak ditemukan produk dengan kata kunci: ${query}`);
+                    }
+                }
+            });
+            
+            // Search input enter key
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('searchButton').click();
+                }
+            });
+            
+            // Cart icon
+            document.getElementById('cartIcon').addEventListener('click', function() {
+                alert('Keranjang belanja Anda berisi 0 item. Total: Rp 0');
+            });
+            
+            // Product card click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.product-card')) {
+                    const productCard = e.target.closest('.product-card');
+                    const productName = productCard.querySelector('.product-name').textContent;
+                    
+                    if (!e.target.classList.contains('whatsapp-order-btn') && 
+                        !e.target.closest('.whatsapp-order-btn')) {
+                        
+                        // Cari produk berdasarkan nama
+                        const product = products.find(p => p.name === productName);
+                        if (product) {
+                            showProductDetail(product);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Tampilkan detail produk dengan testimoni
+        function showProductDetail(product) {
+            // Generate stars untuk rating produk
+            let productStars = '';
+            const fullStars = Math.floor(product.rating);
+            const hasHalfStar = product.rating % 1 !== 0;
+            
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    productStars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars && hasHalfStar) {
+                    productStars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    productStars += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            // Generate testimoni HTML
+            let testimonialsHTML = '';
+            if (product.testimonials && product.testimonials.length > 0) {
+                testimonialsHTML = `
+                    <div class="product-testimonials" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #1a5fb4;">
+                            <i class="fas fa-comment"></i> Testimoni untuk Produk Ini
+                        </div>
+                `;
+                
+                product.testimonials.forEach(testimonial => {
+                    let testimonialStars = '';
+                    for (let i = 0; i < 5; i++) {
+                        if (i < Math.floor(testimonial.rating)) {
+                            testimonialStars += '<i class="fas fa-star"></i>';
+                        } else if (i === Math.floor(testimonial.rating) && testimonial.rating % 1 !== 0) {
+                            testimonialStars += '<i class="fas fa-star-half-alt"></i>';
+                        } else {
+                            testimonialStars += '<i class="far fa-star"></i>';
+                        }
+                    }
+                    
+                    testimonialsHTML += `
+                        <div style="display: flex; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+                            <img src="${testimonial.avatar}" alt="Customer" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <div style="font-weight: 600; font-size: 13px; color: #333;">${testimonial.name}</div>
+                                    <div style="font-size: 11px; color: #666;">${testimonial.date}</div>
+                                </div>
+                                <div style="color: #ffa726; font-size: 11px; margin-bottom: 5px;">
+                                    ${testimonialStars}
+                                </div>
+                                <div style="font-size: 12px; color: #333; line-height: 1.4;">${testimonial.text}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                testimonialsHTML += '</div>';
+            }
+            
+            // Buat modal detail produk
+            const modalHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 2000;
+                    padding: 20px;
+                ">
+                    <div style="
+                        background: white;
+                        border-radius: 15px;
+                        width: 100%;
+                        max-width: 400px;
+                        max-height: 90vh;
+                        overflow-y: auto;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                    ">
+                        <div style="position: relative;">
+                            <img src="${product.image}" alt="${product.name}" 
+                                 style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px 15px 0 0;">
+                            <button id="closeModal" style="
+                                position: absolute;
+                                top: 15px;
+                                right: 15px;
+                                background: rgba(0,0,0,0.5);
+                                color: white;
+                                border: none;
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 50%;
+                                font-size: 20px;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">×</button>
+                        </div>
+                        <div style="padding: 20px;">
+                            <h2 style="margin-bottom: 10px; color: #1a5fb4;">${product.name}</h2>
+                            <div style="font-size: 24px; font-weight: bold; color: #1a5fb4; margin-bottom: 15px;">
+                                ${product.price}
+                            </div>
+                            <div style="color: #ffa726; margin-bottom: 15px;">
+                                ${productStars} (${product.ratingCount} ulasan)
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="margin-bottom: 10px; color: #333;">Deskripsi Produk</h3>
+                                <p style="color: #666; line-height: 1.6;">
+                                    ${product.description}
+                                </p>
+                            </div>
+                            ${testimonialsHTML}
+                            <button class="whatsapp-order-btn" 
+                                    data-product-id="${product.id}"
+                                    style="width: 100%; padding: 15px; font-size: 16px; margin-top: 20px;">
+                                <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Tambahkan modal ke body
+            const modalDiv = document.createElement('div');
+            modalDiv.innerHTML = modalHTML;
+            document.body.appendChild(modalDiv);
+            
+            // Event listener untuk tombol close
+            modalDiv.querySelector('#closeModal').addEventListener('click', function() {
+                document.body.removeChild(modalDiv);
+            });
+            
+            // Event listener untuk tombol WhatsApp di modal
+            modalDiv.querySelector('.whatsapp-order-btn').addEventListener('click', function() {
+                openWhatsAppOrder(product);
+                document.body.removeChild(modalDiv);
+            });
+            
+            // Close modal saat klik di luar konten
+            modalDiv.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    document.body.removeChild(modalDiv);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
